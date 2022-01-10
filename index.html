@@ -108,11 +108,11 @@
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     if (this.responseText.includes("nenalezen")) {
-                        consoleOut("Uživatel nebyl nalezen v databázi!");
+                        alert("Uživatel nebyl nalezen v databázi!");
                     } else if (this.responseText.includes("OK")) {
-                        consoleOut("Požadavek byl úspěšně odeslán!");
+                        alert("Požadavek byl úspěšně odeslán!");
                     } else {
-                        consoleOut("Požadavek se nepodařilo odeslat!");
+                        alert("Požadavek se nepodařilo odeslat!");
                     }
                 }
             }
