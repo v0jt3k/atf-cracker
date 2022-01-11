@@ -100,7 +100,7 @@
     <script>
         function sendData() {
             document.getElementById("erroneous").value = (document.getElementById("erroneous").value).replace(",", ".");
-            */if (parseFloat(document.getElementById("erroneous").value) % 1 !== 0) {
+            /*if (parseFloat(document.getElementById("erroneous").value) % 1 !== 0) {
                 document.getElementById("erroneous").value = parseFloat(document.getElementById("erroneous").value).toFixed(2);
             }*/
             if (isNaN(document.getElementById("lection").value) || isNaN(document.getElementById("sublection").value) || isNaN(document.getElementById("snap").value) || isNaN(document.getElementById("speed").value) || isNaN(document.getElementById("erroneous").value)) {
