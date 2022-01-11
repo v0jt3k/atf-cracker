@@ -1,0 +1,141 @@
+<!--
+ * ATF Cracker (verze 1.0.2)
+ * © Tomáš Vojtek 2022
+ * https://github.com/vojtektomascz/atf-cracker
+-->
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jednoduchá webová aplikace">
+    <meta name="author" content="Tomáš Vojtek">
+    <title>ATF cracker</title>
+</head>
+<body>
+    <style>
+        body { 
+            padding: 2%;
+            text-align: center;
+            font-family: Arial;
+            color: white;
+            background: black;
+        }
+        body::after {
+            content: "";
+            background: url("https://vojtek.php5.cz/projects/atf-cracker/keyboard.jpg");
+            background-size: cover;
+            opacity: 0.2;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;   
+        }
+        h1 { 
+            font-size: 54px;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+        }
+        input, select {
+            margin: 5px;
+            font-size: 20px;
+        }
+        input[type=text], select {
+            width: 380px;
+            padding: 12px; 
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            color: white;
+            background-color: #303030;
+        }   
+        @media screen and (max-width: 405px) {
+            input[type=text], select {
+                width: 100%;
+            }        
+        }
+        input[type=submit], button {
+            background-color: #303030;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }        
+        input[type=submit]:hover, button:hover {
+            background-color: #686868;
+            text-decoration: none;
+            color: white;
+        }   
+    </style>
+    <h1>ATF cracker</h1>
+    <div id="content">
+        <form onsubmit="return sendData()" id="form">
+            <input type="text" name="username" id="username" placeholder="Uživatelské jméno" required><br>
+            <input type="text" name="lection" id="lection" placeholder="Lekce" required><br>
+            <select name="sublection" id="sublection" required>
+                <option value="1">Hmaty</option>
+                <option value="2">Slova</option>
+                <option value="3">Věty</option>
+                <option value="4">Text</option>
+            </select><br>
+            <input type="text" name="snap" id="snap" placeholder="Snímek" required><br>
+            <input type="text" name="speed" id="speed" placeholder="Rychlost" required><br>
+            <input type="checkbox" name="rand" id="rand" onchange="check()"><label for="rand">Náhodná rychlost</label>
+            <div id="randContent"></div><br>
+            <input type="text" name="erroneous" id="erroneous" placeholder="Chybovost" required><br>
+            <input type="submit" value="Odeslat">
+        </form>
+    </div>
+    <br><br><br>
+    <a href="https://tomasvojtek.cz" target="_blank">&copy; Tomáš Vojtek <script>document.write(new Date().getFullYear());</script></a>
+    <script>
+        function sendData() {
+            if (isNaN(document.getElementById("lection").value) || isNaN(document.getElementById("sublection").value) || isNaN(document.getElementById("snap").value) || isNaN(document.getElementById("speed").value) || isNaN(document.getElementById("erroneous").value)) {
+                alert("Požadavek se nepodařilo odeslat, zkontrolujte formulář.");
+                return false;
+            }
+            if (document.getElementById("rand").checked) {
+                if (isNaN(document.getElementById("from").value) || isNaN(document.getElementById("to").value)) {
+                    alert("Požadavek se nepodařilo odeslat, zkontrolujte formulář. Chyba bude nejspíše v sekci: Náhodná rychlost");
+                    return false;
+                }
+                document.getElementById("speed").value = Math.trunc(Math.random() * (parseInt(document.getElementById("from").value) - parseInt(document.getElementById("to").value) + 1)) + parseInt(document.getElementById("to").value);
+            }
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    if (this.responseText.includes("nenalezen")) {
+                        alert("Uživatel nebyl nalezen v databázi!");
+                    } else if (this.responseText.includes("OK")) {
+                        alert("Požadavek byl úspěšně odeslán!");
+                    } else {
+                        alert("Požadavek se nepodařilo odeslat!");
+                    }
+                }
+            }
+            xhttp.open("GET", "https://www.atfonline.cz/saveSnapResult.php?username=" + document.getElementById("username").value + "&normal=YES&lection=" + document.getElementById("lection").value + "&sublection=" + document.getElementById("sublection").value + "&snap=" + document.getElementById("snap").value + "&fortime=-1&speed=" + document.getElementById("speed").value + "&erroneous=" + (parseInt(document.getElementById("erroneous").value)).toFixed(2) + "&corrmode=YES", true);
+            xhttp.send();
+            return false;
+        }     
+        check();
+        function check() {
+            if (document.getElementById("rand").checked) {
+                document.getElementById("randContent").innerHTML = '<input type="text" name="from" id="from" placeholder="od" value="200" required> až <input type="text" name="to" id="to" placeholder="do" value="400" required><br>';
+                document.getElementById("speed").required = false;
+            } else {
+                document.getElementById("randContent").innerHTML = "";
+                document.getElementById("speed").required = true;
+            }
+        }
+    </script>
+</body>
+</html>
