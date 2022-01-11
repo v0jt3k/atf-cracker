@@ -99,6 +99,10 @@
     <a href="https://tomasvojtek.cz" target="_blank">&copy; Tomáš Vojtek <script>document.write(new Date().getFullYear());</script></a>
     <script>
         function sendData() {
+            document.getElementById("erroneous").value = (document.getElementById("erroneous").value).replace(",", ".");
+            /*if (document.getElementById("erroneous").value % 1 !== 0) {
+                
+            } */
             if (isNaN(document.getElementById("lection").value) || isNaN(document.getElementById("sublection").value) || isNaN(document.getElementById("snap").value) || isNaN(document.getElementById("speed").value) || isNaN(document.getElementById("erroneous").value)) {
                 alert("Požadavek se nepodařilo odeslat, zkontrolujte formulář.");
                 return false;
@@ -122,7 +126,7 @@
                     }
                 }
             }
-            xhttp.open("GET", "https://www.atfonline.cz/saveSnapResult.php?username=" + document.getElementById("username").value + "&normal=YES&lection=" + document.getElementById("lection").value + "&sublection=" + document.getElementById("sublection").value + "&snap=" + document.getElementById("snap").value + "&fortime=-1&speed=" + document.getElementById("speed").value + "&erroneous=" + (parseInt(document.getElementById("erroneous").value)).toFixed(2) + "&corrmode=YES", true);
+            xhttp.open("GET", "https://www.atfonline.cz/saveSnapResult.php?username=" + document.getElementById("username").value + "&normal=YES&lection=" + document.getElementById("lection").value + "&sublection=" + document.getElementById("sublection").value + "&snap=" + document.getElementById("snap").value + "&fortime=-1&speed=" + document.getElementById("speed").value + "&erroneous=" + parseFloat(document.getElementById("erroneous").value) + "&corrmode=YES", true);
             xhttp.send();
             return false;
         }     
