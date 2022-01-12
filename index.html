@@ -1,9 +1,3 @@
-<!--
- * ATF Cracker (verze 1.0.2)
- * © Tomáš Vojtek 2022
- * https://github.com/vojtektomascz/atf-cracker
--->
-
 <!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -100,10 +94,7 @@
     <script>
         function sendData() {
             document.getElementById("erroneous").value = (document.getElementById("erroneous").value).replace(",", ".");
-            /*if (parseFloat(document.getElementById("erroneous").value) % 1 !== 0) {
-                document.getElementById("erroneous").value = parseFloat(document.getElementById("erroneous").value).toFixed(2);
-            }*/
-            if (isNaN(document.getElementById("lection").value) || isNaN(document.getElementById("sublection").value) || isNaN(document.getElementById("snap").value) || isNaN(document.getElementById("speed").value) || isNaN(document.getElementById("erroneous").value)) {
+            if (isNaN(document.getElementById("lection").value) || isNaN(document.getElementById("snap").value) || isNaN(document.getElementById("speed").value) || isNaN(document.getElementById("erroneous").value)) {
                 alert("Požadavek se nepodařilo odeslat, zkontrolujte formulář.");
                 return false;
             }
@@ -114,7 +105,7 @@
                 }
                 document.getElementById("speed").value = Math.trunc(Math.random() * (parseInt(document.getElementById("from").value) - parseInt(document.getElementById("to").value) + 1)) + parseInt(document.getElementById("to").value);
             }
-            var xhttp = new XMLHttpRequest();
+            const xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     if (this.responseText.includes("nenalezen")) {
@@ -126,11 +117,10 @@
                     }
                 }
             }
-            xhttp.open("GET", "https://www.atfonline.cz/saveSnapResult.php?username=" + document.getElementById("username").value + "&normal=YES&lection=" + document.getElementById("lection").value + "&sublection=" + document.getElementById("sublection").value + "&snap=" + document.getElementById("snap").value + "&fortime=-1&speed=" + document.getElementById("speed").value + "&erroneous=" + parseFloat(document.getElementById("erroneous").value) + "&corrmode=YES", true);
+            xhttp.open("GET", "https://www.atfonline.cz/saveSnapResult.php?username=" + document.getElementById("username").value + "&normal=YES&lection=" + document.getElementById("lection").value + "&sublection=" + document.getElementById("sublection").value + "&snap=" + document.getElementById("snap").value + "&fortime=-1&speed=" + document.getElementById("speed").value + "&erroneous=" + (parseFloat(document.getElementById("erroneous").value)).toFixed(2) + "&corrmode=YES", true);
             xhttp.send();
             return false;
-        }     
-        check();
+        }   
         function check() {
             if (document.getElementById("rand").checked) {
                 document.getElementById("randContent").innerHTML = '<input type="text" name="from" id="from" placeholder="od" value="200" required> až <input type="text" name="to" id="to" placeholder="do" value="400" required><br>';
@@ -140,6 +130,7 @@
                 document.getElementById("speed").required = true;
             }
         }
+        check();
     </script>
 </body>
 </html>
