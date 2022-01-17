@@ -26,14 +26,4 @@ function sendData() {
             xhttp.open("GET", "https://www.atfonline.cz/saveSnapResult.php?username=" + document.getElementById("username").value + "&normal=YES&lection=" + document.getElementById("lection").value + "&sublection=" + document.getElementById("sublection").value + "&snap=" + document.getElementById("snap").value + "&fortime=-1&speed=" + document.getElementById("speed").value + "&erroneous=" + (parseFloat(document.getElementById("erroneous").value)).toFixed(2) + "&corrmode=YES", true);
             xhttp.send();
             return false;
-        }   
-        function check() {
-            if (document.getElementById("rand").checked) {
-                document.getElementById("randContent").innerHTML = '<input type="text" name="from" id="from" placeholder="od" value="200" required> až <input type="text" name="to" id="to" placeholder="do" value="400" required><br>';
-                document.getElementById("speed").required = false;
-            } else {
-                document.getElementById("randContent").innerHTML = "";
-                document.getElementById("speed").required = true;
-            }
-        }
-        check();
+}
