@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ATF Cracker je jednoduchá webová aplikace určená pro software ATF Online, která umí vytvářet nové i přepisovat stávající hodnocení snímků ve výsledcích napsaných výrazů.">
+    <meta name="author" content="Tomáš Vojtek">
+    <title>ATF cracker</title>
+</head>
+<body>
+    <style>
+        body { 
+            padding: 2%;
+            text-align: center;
+            font-family: Arial;
+            color: white;
+            background: black;
+        }
+        body::after {
+            content: "";
+            background: url("https://vojtek.php5.cz/projects/atf-cracker/keyboard.jpg");
+            background-size: cover;
+            opacity: 0.2;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;   
+        }
+        h1 { 
+            font-size: 54px;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+        }
+        input, select {
+            margin: 5px;
+            font-size: 20px;
+        }
+        input[type=text], select {
+            width: 380px;
+            padding: 12px; 
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            color: white;
+            background-color: #303030;
+        }   
+        @media screen and (max-width: 405px) {
+            input[type=text], select {
+                width: 100%;
+            }        
+        }
+        input[type=submit], button {
+            background-color: #303030;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }        
+        input[type=submit]:hover, button:hover {
+            background-color: #686868;
+            text-decoration: none;
+            color: white;
+        }   
+    </style>
+    <h1>ATF cracker</h1>
+    <div id="content">
+        <form onsubmit="return sendData()" id="form">
+            <input type="text" name="username" id="username" placeholder="Uživatelské jméno" required><br>
+            <input type="text" name="lection" id="lection" placeholder="Lekce" required><br>
+            <select name="sublection" id="sublection" required>
+                <option value="1">Hmaty</option>
+                <option value="2">Slova</option>
+                <option value="3">Věty</option>
+                <option value="4">Text</option>
+            </select><br>
+            <input type="text" name="snap" id="snap" placeholder="Snímek" required><br>
+            <input type="text" name="speed" id="speed" placeholder="Rychlost" required><br>
+            <input type="checkbox" name="rand" id="rand" onchange="checkForm()"><label for="rand">Náhodná rychlost</label>
+            <div id="randContent"></div><br>
+            <input type="text" name="erroneous" id="erroneous" placeholder="Chybovost" required><br>
+            <input type="submit" value="Odeslat">
+        </form>
+    </div>
+    <br><br><br>
+    <a href="https://tomasvojtek.cz" target="_blank">&copy; Tomáš Vojtek <script>document.write(new Date().getFullYear());</script></a>
+    <script src=".../atf-cracker.js"></script>
+    <script>
+        function checkForm() {
+            if (document.getElementById("rand").checked) {
+                document.getElementById("randContent").innerHTML = '<input type="text" name="from" id="from" placeholder="od" value="200" required> až <input type="text" name="to" id="to" placeholder="do" value="400" required><br>';
+                document.getElementById("speed").required = false;
+            } else {
+                document.getElementById("randContent").innerHTML = "";
+                document.getElementById("speed").required = true;
+            }
+        }
+        checkForm();
+    </script>
+</body>
+</html>
