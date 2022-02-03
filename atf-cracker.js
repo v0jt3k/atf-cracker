@@ -51,6 +51,7 @@ function sendSnap() {
   checkCorrection("toErroneous");
   if (
     isNaN(document.getElementById("lection").value) ||
+    parseInt(document.getElementById("lection").value) <= 0 ||
     isNaN(document.getElementById("snap").value) ||
     isNaN(document.getElementById("speed").value) ||
     isNaN(document.getElementById("erroneous").value)
@@ -164,6 +165,7 @@ function getInfo() {
   showAlert(1);
   if (
     isNaN(document.getElementById("lection").value) ||
+    parseInt(document.getElementById("lection").value) <= 0 ||
     isNaN(document.getElementById("snap").value)
   ) {
     document.getElementsByClassName("result")[0].classList.add("display-none");
@@ -202,6 +204,7 @@ function getText() {
   showAlert(1);
   if (
     isNaN(document.getElementById("lection").value) ||
+    parseInt(document.getElementById("lection").value) <= 0 ||
     isNaN(document.getElementById("snap").value) ||
     isNaN(document.getElementById("width").value)
   ) {
