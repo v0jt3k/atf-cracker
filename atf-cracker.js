@@ -195,12 +195,13 @@ function getInfo() {
         `;
         }
       }
-    }, 500);
+    }, 1000);
     return false;
   }
 }
 
 function getText() {
+  document.getElementsByClassName("result")[0].classList.add("display-none");
   showAlert(1);
   if (
     isNaN(document.getElementById("lection").value) ||
@@ -228,7 +229,7 @@ function getText() {
         document.getElementsByClassName("result")[0].innerText =
           response.txt.replace(new RegExp("~", "g"), " ");
       }
-    }, 500);
+    }, 1000);
     return false;
   }
 }
