@@ -133,10 +133,20 @@
         }
         .result {
             background: rgb(31, 31, 31);
+            overflow-x: auto;
             border-radius: 12px;
             padding: 5%;
             margin: 4%;
         }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #575757;
+        }  
     </style>
     <header>
         <h1><a href="index.html"><strong>ATF cracker</strong></a></h1>
@@ -145,6 +155,8 @@
             <button onclick="showContent(2)" id="2" class="nav-item"><i class="fas fa-cogs"></i>&nbsp; Změna nastavení</button>
             <button onclick="showContent(3)" id="3" class="nav-item"><i class="fas fa-users"></i>&nbsp; Informace o uživateli</button>
             <button onclick="showContent(4)" id="4" class="nav-item"><i class="fas fa-align-left"></i>&nbsp; Výpis textů</button>
+            <button onclick="showContent(5)" id="5" class="nav-item"><i class="fas fa-signal"></i>&nbsp; Skupinový žebříček</button>
+            <button onclick="showContent(6)" id="6" class="nav-item"><i class="fas fa-user-plus"></i>&nbsp; Registrace uživatele</button>
         </nav>
     </header>
     <main>
@@ -155,7 +167,7 @@
                 <div class="alert-header"></div>
                 <div class="alert-description"></div>
             </div>
-            <section class="result display-none"></section>
+            <div class="result display-none"></div>
             <section class="form"></section>
         </div>
     </main>
@@ -233,6 +245,32 @@
                 `);
             } else if (value == 4) {
                 generateForm("getText", `
+                    <select name="typelection" id="typelection" onchange="checkSelect()" required>
+                        <option value="1" selected>Procvičování</option>
+                        <option value="2">Skupinové psaní</option>
+                    </select><br>
+                    <div id="afterSelect"></div>
+                `);
+                checkSelect();
+            } else if (value == 5) {
+                generateForm("getGroupTop", `
+                    <input type="text" name="groupName" id="groupName" placeholder="Název skupiny" required><br>
+                    <input type="text" name="groupPass" id="groupPass" placeholder="Heslo skupiny" required>
+                `);
+            } else if (value == 6) {
+                generateForm("regUser", "");
+            } else {
+                document.getElementsByClassName("form")[0].innerHTML = `<p>404 - Stránka nebyl nalezena!</p>`;
+            }
+        }
+        showContent(1);
+        function checkForm(value, content) {
+            document.getElementById(content + "Content").classList.toggle("display-none");
+            value.checked ? document.getElementById(content).required = false : document.getElementById(content).required = true;
+        }
+        function checkSelect() {
+            if (document.getElementById("typelection").value == 1) {
+                document.getElementById("afterSelect").innerHTML = `
                     <input type="text" name="lection" id="lection" placeholder="Lekce" required><br>
                     <select name="sublection" id="sublection" required>
                         <option value="1">Hmaty</option>
@@ -242,13 +280,13 @@
                     </select><br>
                     <input type="text" name="snap" id="snap" placeholder="Snímek" required><br>
                     <input type="text" name="width" id="width" placeholder="Velikost" required>
-                `);
+                `;
+            } else {
+                document.getElementById("afterSelect").innerHTML = `
+                    <input type="text" name="groupName" id="groupName" placeholder="Název skupiny" required><br>
+                    <input type="text" name="groupPass" id="groupPass" placeholder="Heslo skupiny" required>
+                `;
             }
-        }
-        showContent(1);
-        function checkForm(value, content) {
-            document.getElementById(content + "Content").classList.toggle("display-none");
-            value.checked ? document.getElementById(content).required = false : document.getElementById(content).required = true;
         }
         function showAlert(status, text, title, img) {
             scroll(0, 0);

@@ -25,7 +25,7 @@ const ajax = {
   reset() {
     values = "";
   },
-  send(url) {
+  send(file, server) {
     xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
@@ -39,7 +39,12 @@ const ajax = {
         }
       }
     };
-    xhttp.open("GET", "https://atfonline.cz/" + url + ".php?" + values, true);
+    if (server == 1) {
+      url = "https://iatf.cz/";
+    } else {
+      url = "https://atfonline.cz/";
+    }
+    xhttp.open("GET", url + file + ".php?" + values, true);
     xhttp.send();
   },
 };
@@ -103,7 +108,7 @@ function sendSnap() {
     parseFloat(document.getElementById("erroneous").value).toFixed(2)
   );
   ajax.addValue("corrmode", "YES");
-  ajax.send("saveSnapResult");
+  ajax.send("saveSnapResult", 0);
   return false;
 }
 function sendSettings() {
@@ -147,7 +152,7 @@ function sendSettings() {
       "displayhand",
       checkValue(document.getElementById("displayhand").checked)
     );
-    ajax.send("saveEduProfile");
+    ajax.send("saveEduProfile", 0);
     showAlert(1);
     ajax.reset();
     ajax.addValue("username", document.getElementById("username").value);
@@ -155,7 +160,7 @@ function sendSettings() {
     ajax.addValue("fontSize", document.getElementById("fontSize").value);
     ajax.addValue("fontWeight", document.getElementById("fontWeight").value);
     ajax.addValue("fontStyle", document.getElementById("fontStyle").value);
-    ajax.send("saveFontProfile");
+    ajax.send("saveFontProfile", 0);
     return false;
   }
 }
@@ -179,7 +184,7 @@ function getInfo() {
     ajax.addValue("snap", document.getElementById("snap").value);
     ajax.addValue("gensnap", "YES");
     ajax.addValue("widthchar", "1");
-    ajax.send("atfSnap");
+    ajax.send("atfSnap", 0);
     setTimeout(function () {
       if (response.msg.includes("OK")) {
         document
@@ -195,40 +200,115 @@ function getInfo() {
         `;
         }
       }
-    }, 500);
+    }, 1000);
     return false;
   }
 }
 
 function getText() {
+  document.getElementsByClassName("result")[0].classList.add("display-none");
   showAlert(1);
-  if (
-    isNaN(document.getElementById("lection").value) ||
-    parseInt(document.getElementById("lection").value) <= 0 ||
-    isNaN(document.getElementById("snap").value) ||
-    isNaN(document.getElementById("width").value)
-  ) {
-    document.getElementsByClassName("result")[0].classList.add("display-none");
-    showAlert(3, "Zkontrolujte formulář.");
-    return false;
+  if (document.getElementById("typelection").value == 1) {
+    if (
+      isNaN(document.getElementById("lection").value) ||
+      parseInt(document.getElementById("lection").value) <= 0 ||
+      isNaN(document.getElementById("snap").value) ||
+      isNaN(document.getElementById("width").value)
+    ) {
+      document.getElementsByClassName("result")[0].classList.add("display-none");
+      showAlert(3, "Zkontrolujte formulář.");
+      return false;
+    } else {
+      ajax.reset();
+      ajax.addValue("username", document.getElementById("username").value);
+      ajax.addValue("lection", document.getElementById("lection").value);
+      ajax.addValue("sublection", document.getElementById("sublection").value);
+      ajax.addValue("snap", document.getElementById("snap").value);
+      ajax.addValue("gensnap", "YES");
+      ajax.addValue("widthchar", document.getElementById("width").value);
+      ajax.send("atfSnap", 0);
+      setTimeout(function () {
+        if (response.msg.includes("OK")) {
+          document
+            .getElementsByClassName("result")[0]
+            .classList.remove("display-none");
+          document.getElementsByClassName("result")[0].innerText =
+            response.txt.replace(new RegExp("~", "g"), " ");
+        }
+      }, 1000);
+    }
   } else {
     ajax.reset();
-    ajax.addValue("username", document.getElementById("username").value);
-    ajax.addValue("lection", document.getElementById("lection").value);
-    ajax.addValue("sublection", document.getElementById("sublection").value);
-    ajax.addValue("snap", document.getElementById("snap").value);
-    ajax.addValue("gensnap", "YES");
-    ajax.addValue("widthchar", document.getElementById("width").value);
-    ajax.send("atfSnap");
-    setTimeout(function () {
+    ajax.addValue("user", document.getElementById("username").value);
+    ajax.addValue("userpass", null);
+    ajax.addValue("group", document.getElementById("groupName").value);
+    ajax.addValue("grouppass", document.getElementById("groupPass").value);
+    ajax.send("atfGroupText", 1);
+    setTimeout(function() {
       if (response.msg.includes("OK")) {
-        document
+        document.getElementsByClassName("result")[0].classList.remove("display-none");
+        document.getElementsByClassName("result")[0].innerHTML = `
+          <p><strong>Název textu: </strong>${response.itl}</p>
+          <p>${response.txt}</p>
+        `;
+      }
+    }, 1000);
+  }
+  return false;
+}
+
+function getGroupTop() {
+  document.getElementsByClassName("result")[0].classList.add("display-none");
+  showAlert(1);
+  ajax.reset();
+  ajax.addValue("user", document.getElementById("username").value);
+  ajax.addValue("userpass", null);
+  ajax.addValue("group", document.getElementById("groupName").value);
+  ajax.addValue("grouppass", document.getElementById("groupPass").value);
+  ajax.send("atfGroupTop", 1);
+  setTimeout(function() {
+    if (response.msg.includes("OK")) {
+      document
           .getElementsByClassName("result")[0]
           .classList.remove("display-none");
-        document.getElementsByClassName("result")[0].innerText =
-          response.txt.replace(new RegExp("~", "g"), " ");
+      let table = `
+        <p><strong>Název textu: </strong>${response.itl}</p><br><br>
+        <table>
+          <tr>
+            <th>Pořadí</th>
+            <th>Jméno</th>
+            <th>Známka</th>
+            <th>Rychlost</th>
+            <th>Chybovost</th>
+            <th>Datum</th>
+          </tr>
+          <tr>
+      `;
+      for (let i = 0; i < response.cnt; i++) {
+        table += `
+          <tr>
+            <td>${response.ord[i]}</td>
+            <td>${response.usn[i]}</td>
+            <td>${response.mrk[i]}</td>
+            <td>${response.spd[i]}</td>
+            <td>${response.err[i]}</td>
+            <td>${response.dat[i]}</td>
+          </tr>
+        `;
       }
-    }, 500);
-    return false;
-  }
+      table += ` 
+        </table>
+      `;
+      document.getElementsByClassName("result")[0].innerHTML = table;
+    }
+  }, 1000);
+  return false;
+}
+
+function regUser() {
+  showAlert(1);
+  ajax.reset();
+  ajax.addValue("user", document.getElementById("username").value);
+  ajax.send("atfUserReg", 1);
+  return false;
 }
