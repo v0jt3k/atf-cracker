@@ -32,6 +32,8 @@ const ajax = {
         response = JSON.parse(this.responseText);
         if (response.msg.includes("nenalezen")) {
           showAlert(3, "Uživatel nebyl nalezen v databázi!");
+        } else if (response.msg.includes("heslo")) {
+          showAlert(3, "Zadené heslo nesouhlasí!");
         } else if (response.msg.includes("OK")) {
           showAlert(2);
         } else {
